@@ -1,0 +1,36 @@
+{
+  "name": "recount-threshold",
+  "version": "1.0.0-pre",
+  "description": "A project generated from aunty's svelte project template.",
+  "license": "MIT",
+  "private": true,
+  "contributors": [
+    "Colin Gourlay <colin@colin-gourlay.com>"
+  ],
+  "aunty": {
+    "type": "svelte"
+  },
+  "scripts": {
+    "start": "aunty serve",
+    "test": "aunty test"
+  },
+  "abc": {
+    "css": {
+      "libraryDir": "./node_modules/@abcaustralia/nucleus/css",
+      "logVariables": "false"
+    }
+  },
+  "devDependencies": {
+    "@abcnews/aunty": "^11.1.1",
+    "@testing-library/svelte": "^3.0.0",
+    "@types/jest": "^26.0.15",
+    "@types/webpack-env": "^1.15.3",
+    "elections-us2020-results-data": "git+ssh://git@stash.abc-dev.net.au:7999/news/elections-us2020-results-data.git"
+  },
+  "dependencies": {
+    "@abcnews/env-utils": "^2.0.0",
+    "@abcnews/mount-utils": "^2.0.0",
+    "d3-dsv": "^2.0.0",
+    "svelte": "^3.29.4"
+  }
+}
