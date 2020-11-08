@@ -183,6 +183,13 @@ export const PARTY_CANDIDATES = {
   oth: 'Other'
 };
 
+export type Change = {
+  date: Date;
+  leading: string;
+  marginVotes: number;
+  expectedUncountedVotes: number;
+};
+
 export type Result = {
   date: Date;
   leading: string;
@@ -201,4 +208,5 @@ export type Datum = {
   electoralCollegeVotes: number;
   scenarios: Scenarios;
   result: Result;
+  changes: Change[];
 };

@@ -1,27 +1,12 @@
 <script lang="ts">
-  import { Scenario, Scenarios, Result, Remunerator } from '../../constants';
+  import { Scenario, Scenarios, Change, Result, Remunerator } from '../../constants';
   import { Qualifier, SCENARIO_NAMES } from '../../constants';
   import { likelyRecounts, possibleRecounts } from '../../stores';
 
   export let stateCode: string;
   export let scenarios: Scenarios;
-  export let result: Result;
-
-  const {
-    // date,
-    leading,
-    leadingVotes,
-    // trailing,
-    // trailingVotes,
-    // uncountedVotes,
-    marginVotes,
-    countedVotes
-    // expectedUncountedVotes,
-    // expectedTotalVotes
-  } = result;
-
-  let hasPossibleRecount = false;
-  let hasLikelyRecount = false;
+  export let marginVotes: number;
+  export let countedVotes: number;
 
   const resultScenarios = Object.keys(scenarios).map(name => {
     const scenario = scenarios[name] as Scenario;
@@ -113,10 +98,10 @@
       <p>{scenario.condition}</p>
       <h4>Who pays? <strong>{scenario.remunerator}</strong></h4>
       <h4>
-        {scenario.name === 'automatic' ? 'Likely' : 'Possible'}? <strong
+        {scenario.name === 'automatic' ? 'Likely' : 'Possible'}?
+        <strong
           data-possible={scenario.isRecountPossible ? '' : undefined}>{scenario.isRecountPossible ? 'Yes' : 'No'}</strong>
       </h4>
     </div>
   {/each}
-  <!-- <pre>{JSON.stringify(result, null, 2)}</pre> -->
 </div>

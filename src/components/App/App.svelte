@@ -59,7 +59,7 @@
     <p>Loading...</p>
   {:then data}
     <div class="states">
-      {#each data as { stateName, stateCode, electoralCollegeVotes, scenarios, result }}
+      {#each data as { stateName, stateCode, electoralCollegeVotes, scenarios, result, changes }}
         <article
           data-state={stateCode}
           data-has-possible={$possibleRecounts[stateCode] ? '' : undefined}
@@ -68,8 +68,29 @@
           <h4>
             {`${result.leading}'s margin: ${result.marginVotes} votes (${((result.marginVotes / result.countedVotes) * 100).toFixed(2)}%)`}
           </h4>
-
-          <Card {stateCode} {scenarios} {result} />
+          <Card {stateCode} {scenarios} marginVotes={result.marginVotes} countedVotes={result.countedVotes} />
+          {#if changes}
+            <details>
+              <summary>Changes</summary>
+              <table>
+                <tr>
+                  <!-- <th>Date</th> -->
+                  <th>Leading</th>
+                  <th>Margin</th>
+                  <th>Uncounted</th>
+                </tr>
+                {#each changes as { date, leading, marginVotes, expectedUncountedVotes }}
+                  <tr>
+                    <!-- <td>{date}</td> -->
+                    <td>{leading}</td>
+                    <td>{marginVotes}</td>
+                    <td>{expectedUncountedVotes > 0 ? expectedUncountedVotes : 'Unknown'}</td>
+                  </tr>
+                {/each}
+              </table>
+              <!-- <pre>{JSON.stringify(changes, null, 2)}</pre> -->
+            </details>
+          {/if}
         </article>
       {/each}
     </div>
