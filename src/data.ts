@@ -110,7 +110,7 @@ export const loadData = ({ server, forceRefresh, test }: LoadDataOptions = {}) =
       (resultsData as Datum[]).map(d => {
         return {
           ...d,
-          changes: changesData[d.stateCode]
+          changes: changesData[d.stateCode] && changesData[d.stateCode].slice(0, 10)
         };
       })
   );

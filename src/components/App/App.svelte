@@ -6,6 +6,28 @@
   import { likelyRecounts, possibleRecounts } from '../../stores';
   import Card from '../Card/Card.svelte';
 
+  const MONTH_SHORTNAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
+  const formatTimeUpdated = (date: Date) => {
+    const dateString = date.toString();
+    const hours = date.getHours();
+
+    return isToday(date)
+      ? `${hours % 12 || 12}:${String(date.getMinutes()).padStart(2, '0')}${
+          hours >= 12 ? 'p' : 'a'
+        }m ${dateString.substring(dateString.indexOf('(')).replace(/([a-z\s]+)/g, '')}`
+      : `${date.getDate()} ${MONTH_SHORTNAMES[date.getMonth()]}`;
+  };
+
   const dataPromise = loadData();
 
   dataPromise.then(data => console.log(data));
@@ -13,13 +35,27 @@
 
 <style lang="scss">
   .root {
-    margin: var(--grid-gap);
+    margin: 0 auto;
+    max-width: 160ch;
+  }
+
+  h1,
+  .loading {
+    text-align: center;
+    margin: var(--grid-gap) 0 0 0;
+    padding: var(--grid-gap);
   }
 
   .states {
+    margin: var(--grid-gap);
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(32ch, 1fr));
+    grid-template-columns: 1;
     grid-gap: var(--grid-gap);
+
+    @media (min-width: 80ch) {
+      grid-template-columns: repeat(auto-fit, minmax(35ch, 1fr));
+      grid-gap: var(--grid-gap);
+    }
   }
 
   article {
@@ -27,7 +63,7 @@
     padding: 1rem;
 
     &:not([data-has-possible]):not([data-has-likely]) {
-      opacity: 0.5;
+      opacity: 0.667;
     }
 
     &[data-has-possible] {
@@ -52,11 +88,24 @@
     line-height: 1.75;
     white-space: nowrap;
   }
+
+  table {
+    width: 100%;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  [data-number] {
+    text-align: right;
+  }
 </style>
 
 <div class="root">
+  <h1>Can I get a recount?</h1>
   {#await dataPromise}
-    <p>Loading...</p>
+    <p class="loading">Loading...</p>
   {:then data}
     <div class="states">
       {#each data as { stateName, stateCode, electoralCollegeVotes, scenarios, result, changes }}
@@ -71,20 +120,20 @@
           <Card {stateCode} {scenarios} marginVotes={result.marginVotes} countedVotes={result.countedVotes} />
           {#if changes}
             <details>
-              <summary>Changes</summary>
+              <summary>Latest counts</summary>
               <table>
                 <tr>
-                  <!-- <th>Date</th> -->
+                  <th>Date</th>
                   <th>Leading</th>
-                  <th>Margin</th>
-                  <th>Uncounted</th>
+                  <th data-number>Margin</th>
+                  <th data-number>Uncounted</th>
                 </tr>
                 {#each changes as { date, leading, marginVotes, expectedUncountedVotes }}
                   <tr>
-                    <!-- <td>{date}</td> -->
+                    <td>{formatTimeUpdated(date)}</td>
                     <td>{leading}</td>
-                    <td>{marginVotes}</td>
-                    <td>{expectedUncountedVotes > 0 ? expectedUncountedVotes : 'Unknown'}</td>
+                    <td data-number>{marginVotes}</td>
+                    <td data-number>{expectedUncountedVotes > 0 ? expectedUncountedVotes : 'Unknown'}</td>
                   </tr>
                 {/each}
               </table>
